@@ -74,7 +74,27 @@ def index(request):
                         },
                     )
             else:
-                return redirect("//" + settings.CANONICAL_HOST + reverse("index"))
+                # inside this else: user is in another website
+                if request.account_user.home is None:
+                    # user has no home, let's ignore them
+                    return redirect("//" + settings.CANONICAL_HOST + reverse("index"))
+                else:
+                    # user has home set, show it to visitor
+                    return render(
+                        request,
+                        "main/page_detail.html",
+                        {
+                            "page": models.Page.objects.get(
+                                id=request.account_user.home.id
+                            ),
+                            "canonical_url": f"{settings.PROTOCOL}//{settings.CANONICAL_HOST}",
+                            "subdomain": request.subdomain,
+                            "account_user": request.account_user,
+                            "page_list": models.Page.objects.filter(
+                                user=request.account_user
+                            ).defer("body"),
+                        },
+                    )
 
     # Account site as owner:
     # Redirect to "account_index" so that the requests gets a subdomain
