@@ -9,7 +9,7 @@ from main import models
 class UserCreationForm(DjUserCreationForm):
     class Meta:
         model = get_user_model()
-        fields = ["username", "email", "website_title"]
+        fields = ["username", "email", "website_title", "custom_domain"]
 
 
 class UserUpdateForm(forms.ModelForm):

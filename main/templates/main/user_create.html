@@ -32,6 +32,17 @@
         </p>
 
         <p>
+            <label for="id_custom_domain">{{ form.custom_domain.label }}</label>
+            {% if form.custom_domain.errors %}
+            {% for error in form.custom_domain.errors %}
+            <span class="form-error">{{ error|escape }}</span><br>
+                {% endfor %}
+                {% endif %}
+                {{ form.custom_domain }}
+            <span class="helptext">{{ form.custom_domain.help_text }}</span>
+        </p>
+
+        <p>
             <label for="id_email">{{ form.email.label }}</label>
             {% if form.email.errors %}
                 {% for error in form.email.errors %}
