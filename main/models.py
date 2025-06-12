@@ -28,7 +28,7 @@ class User(AbstractUser):
         null=True,
         validators=[validators.validate_domain_name],
     )
-    custom_css = models.TextField("Custom CSS", blank=True, null=True)
+    custom_css = models.TextField("Custom CSS", blank=True, null=True, default="")
     contact = models.BooleanField("Enable Contact page", default=False)
 
     @property
