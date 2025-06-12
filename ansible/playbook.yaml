@@ -105,7 +105,7 @@
     # repository
     - name: clone
       ansible.builtin.git:
-        repo: git@github.com:sirodoht/dukkha.git
+        repo: git@github.com:dukkhapub/dukkha.git
         dest: /var/www/dukkha
         version: main
         accept_hostkey: true
