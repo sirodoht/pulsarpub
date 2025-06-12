@@ -11,5 +11,10 @@ export LOCALDEV=1
 # Used by Django to encrypt session login cookies
 export SECRET_KEY=
 
+# Use SQLite instead of PostgreSQL
+# 1: use SQLITE
+# 0 or any other value: use PostgreSQL
+export SQLITE=0
+
 # PostgreSQL database connection string
 export DATABASE_URL=postgres://dukkha:@localhost:5432/dukkha

@@ -102,21 +102,28 @@ SESSION_COOKIE_DOMAIN = CANONICAL_HOST.split(":")[0]  # session visible in subdo
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-database_url = os.getenv("DATABASE_URL", "")
-database_url = parse.urlparse(database_url)
-# e.g. postgres://dukkha:password@127.0.0.1:5432/dukkha
-database_name = database_url.path[1:]  # url.path is '/dukkha'
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": parse.unquote(database_name or ""),
-        "USER": parse.unquote(database_url.username or ""),
-        "PASSWORD": parse.unquote(database_url.password or ""),
-        "HOST": database_url.hostname,
-        "PORT": database_url.port or "",
-        "CONN_MAX_AGE": 500,
-    },
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
+if os.getenv("SQLITE", "") != "1":
+    database_url = os.getenv("DATABASE_URL", "")
+    database_url = parse.urlparse(database_url)
+    # e.g. postgres://dukkha:password@127.0.0.1:5432/dukkha
+    database_name = database_url.path[1:]  # url.path is '/dukkha'
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": parse.unquote(database_name or ""),
+            "USER": parse.unquote(database_url.username or ""),
+            "PASSWORD": parse.unquote(database_url.password or ""),
+            "HOST": database_url.hostname,
+            "PORT": database_url.port or "",
+            "CONN_MAX_AGE": 500,
+        },
+    }
 
 
 # Password validation
