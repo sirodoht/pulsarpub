@@ -30,6 +30,12 @@ class User(AbstractUser):
     )
     custom_css = models.TextField("Custom CSS", blank=True, null=True, default="")
     contact = models.BooleanField("Enable Contact page", default=False)
+    home = models.ForeignKey(
+        "Page",
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="home",
+    )
 
     @property
     def blog_url(self):

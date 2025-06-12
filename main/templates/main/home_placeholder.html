@@ -1,0 +1,16 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Home — {{ account_user.website_title }}{% endblock %}
+
+{% block content %}
+
+{% include 'partials/nav.html' %}
+
+<main>
+    <h1>Home</h1>
+    <div>
+        This is your home page. It's empty. Set it in your
+        <a href="{% url 'user_update' %}">settings</a>.
+    </div>
+</main>
+{% endblock content %}

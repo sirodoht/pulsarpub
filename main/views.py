@@ -35,23 +35,46 @@ def landing(request):
 
 
 def index(request):
-    # Account site mode as reader/enduser
-    if hasattr(request, "subdomain"):
+    # check if there is a subdomain already
+    if hasattr(request, "subdomain"):  # noqa: SIM102
+        # check if subdomain is valid
         if models.User.objects.filter(username=request.subdomain).exists():
-            return render(
-                request,
-                "main/landing.html",
-                {
-                    "canonical_url": f"{settings.PROTOCOL}//{settings.CANONICAL_HOST}",
-                    "subdomain": request.subdomain,
-                    "account_user": request.account_user,
-                    "page_list": models.Page.objects.filter(
-                        user=request.account_user
-                    ).defer("body"),
-                },
-            )
-        else:
-            return redirect("//" + settings.CANONICAL_HOST + reverse("index"))
+            # check if user is logged in and on their own website
+            if request.user.is_authenticated and request.user == request.account_user:
+                # check if user has set their home page
+                if request.account_user.home is not None:
+                    return render(
+                        request,
+                        "main/page_detail.html",
+                        {
+                            "page": models.Page.objects.get(
+                                id=request.account_user.home.id
+                            ),
+                            "canonical_url": f"{settings.PROTOCOL}//{settings.CANONICAL_HOST}",
+                            "subdomain": request.subdomain,
+                            "account_user": request.account_user,
+                            "page_list": models.Page.objects.filter(
+                                user=request.account_user
+                            ).defer("body"),
+                        },
+                    )
+                else:
+                    # inside this else: user is logged in and in their website but has
+                    # not set their home page
+                    return render(
+                        request,
+                        "main/home_placeholder.html",
+                        {
+                            "canonical_url": f"{settings.PROTOCOL}//{settings.CANONICAL_HOST}",
+                            "subdomain": request.subdomain,
+                            "account_user": request.account_user,
+                            "page_list": models.Page.objects.filter(
+                                user=request.account_user
+                            ).defer("body"),
+                        },
+                    )
+            else:
+                return redirect("//" + settings.CANONICAL_HOST + reverse("index"))
 
     # Account site as owner:
     # Redirect to "account_index" so that the requests gets a subdomain

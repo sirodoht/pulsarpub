@@ -26,7 +26,6 @@ class UserUpdateForm(forms.ModelForm):
             "email",
             "website_title",
             "custom_domain",
-            "contact",
             "home",
         ]
 

@@ -4,8 +4,6 @@
     <a href="{% url 'page_detail' page.slug %}">{{ page.title }}</a>
     {% endfor %}
 
-    <a href="{% url 'memory_create' %}">Submit a memory</a>
-
     {% if request.account_user.contact %}
     <a href="{% url 'contact' %}">Contact</a>
     {% endif %}
