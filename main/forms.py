@@ -61,21 +61,3 @@ class ContactForm(forms.Form):
     name = forms.CharField()
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
-
-
-class MemoryForm(forms.ModelForm):
-    terms_of_service = forms.BooleanField()
-    privacy_policy = forms.BooleanField()
-
-    class Meta:
-        model = models.Memory
-        fields = [
-            "gender",
-            "country",
-            "category",
-            "tags",
-            "school_grade",
-            "school_type",
-            "title",
-            "body",
-        ]

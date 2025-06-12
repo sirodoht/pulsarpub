@@ -41,11 +41,6 @@ urlpatterns += [
     ),
 ]
 
-# Memories
-urlpatterns += [
-    path("memories/submit/", views.MemoryCreate.as_view(), name="memory_create"),
-]
-
 # Pages
 # This section needs to be last due to <slug> being the first word in the path
 urlpatterns += [

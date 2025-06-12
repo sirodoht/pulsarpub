@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 
-from main import country, validators
+from main import validators
 
 
 class User(AbstractUser):
@@ -96,24 +96,3 @@ class Image(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class Memory(models.Model):
-    COUNTRY_CHOICES = [(code, name) for code, name in country.COUNTRIES.items()]
-    country = models.CharField(max_length=2, choices=COUNTRY_CHOICES)
-    GENDER_CHOICES = [
-        ("M", "Male"),
-        ("F", "Female"),
-        ("O", "Other"),
-        ("N", "Prefer not to say"),
-    ]
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    category = models.CharField(max_length=100)
-    tags = models.CharField(max_length=300)
-    school_grade = models.CharField(max_length=100)
-    school_type = models.CharField(max_length=100)
-    title = models.CharField(max_length=100)
-    body = models.TextField("Memory content")
-
-    def __str__(self):
-        return self.title

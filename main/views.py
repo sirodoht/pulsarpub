@@ -40,7 +40,7 @@ def index(request):
         if models.User.objects.filter(username=request.subdomain).exists():
             return render(
                 request,
-                "main/memory_list.html",
+                "main/landing.html",
                 {
                     "canonical_url": f"{settings.PROTOCOL}//{settings.CANONICAL_HOST}",
                     "subdomain": request.subdomain,
@@ -48,7 +48,6 @@ def index(request):
                     "page_list": models.Page.objects.filter(
                         user=request.account_user
                     ).defer("body"),
-                    "memory_list": models.Memory.objects.all(),
                 },
             )
         else:
@@ -393,25 +392,3 @@ class Contact(FormView):
                 user__username=self.request.subdomain
             )
         return context
-
-
-# Memories
-
-
-class MemoryCreate(FormView):
-    form_class = forms.MemoryForm
-    template_name = "main/memory_create.html"
-    success_url = reverse_lazy("dashboard")
-
-    def post(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        if form.is_valid():
-            obj = form.save()
-            message = (
-                f"Your Submission ID is #{obj.id}. Note it down for future reference."
-            )
-            messages.success(self.request, message)
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
