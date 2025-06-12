@@ -99,7 +99,7 @@
     # uv
     - name: uv
       ansible.builtin.shell:
-        cmd: curl -LsSf https://astral.sh/uv/0.5.11/install.sh  | sh
+        cmd: curl -LsSf https://astral.sh/uv/0.7.13/install.sh  | sh
       become_user: deploy
 
     # repository
