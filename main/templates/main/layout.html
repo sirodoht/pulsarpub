@@ -16,16 +16,16 @@
             a:hover { text-decoration: underline; }
 
             /* nav */
-            nav {
+            .system nav {
                 max-width: var(--total-width);
                 margin: 0 auto;
                 text-align: right;
                 padding: 16px 0 8px;
             }
-            nav a {
+            .system nav a {
                 padding: 8px;
             }
-            nav a:hover {
+            .system nav a:hover {
                 text-decoration: none;
                 background: #ffb6b636;
             }
@@ -51,6 +51,14 @@
                 width: 100%;
                 box-sizing: border-box;
             }
+            input[type="submit"] {
+                cursor: pointer;
+                background: white;
+                border: 1px solid #757575;
+                border-radius: 2px;
+                padding: 3px 6px;
+            }
+            input[type="submit"]:hover { background: #fee; border: 1px solid #a0a0a0; };
             textarea { width: 100%; }
             .helptext { color: #757575; }
             .form-inline { display: inline-block; }
@@ -89,11 +97,13 @@
 
         {# Logged out, on landing #}
         {% if not request.user.is_authenticated and not request.subdomain %}
-        <nav>
-            <a href="{% url 'index' %}">home</a>
-            <a href="{% url 'user_create' %}">sign up</a>
-            <a href="{% url 'login' %}">log in</a>
-        </nav>
+        <div class="system">
+            <nav>
+                <a href="{% url 'index' %}">home</a>
+                <a href="{% url 'user_create' %}">sign up</a>
+                <a href="{% url 'login' %}">log in</a>
+            </nav>
+        </div>
         {% endif %}
 
         {% if messages %}
