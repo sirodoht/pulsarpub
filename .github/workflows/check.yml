@@ -22,3 +22,5 @@ jobs:
       run: uv run ruff check
     - name: Run HTML linting
       run: uv run djade main/templates/**/*.html
+    - name: Run tests
+      run: uv run manage.py test
