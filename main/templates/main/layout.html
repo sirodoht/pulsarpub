@@ -6,6 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             /* general */
+            :root {
+                --total-width: 500px;
+            }
             body { font-family: sans-serif; line-height: 1.5; margin: 0; }
             h1 { font-weight: normal; margin: 16px 0; }
             h2 { font-weight: normal; margin: 16px 0; }
@@ -14,7 +17,7 @@
 
             /* nav */
             nav {
-                max-width: 500px;
+                max-width: var(--total-width);
                 margin: 0 auto;
                 text-align: right;
                 padding: 16px 0 8px;
@@ -28,9 +31,16 @@
             }
 
             /* sections */
-            main { max-width: 500px; margin: 0 auto; }
-            aside { max-width: 500px; margin: 8px auto; border: 1px dashed black; padding: 0 8px; }
+            main { max-width: var(--total-width); margin: 0 auto; }
+            aside {
+                max-width: var(--total-width);
+                margin: 16px auto 0;
+                border: 1px solid #c6521e85;
+                padding: 0 8px;
+                box-sizing: border-box;
+            }
             img { width: 100%; }
+            ul { padding-left: 16px; }
 
             /* forms */
             label { display: block; }
@@ -64,16 +74,16 @@
         {# Logged in user, on account #}
         {% if request.user.is_authenticated and request.subdomain == request.user.username %}
         <div style="background: white; text-align: center; box-shadow: 0 -5px 8px rgba(0, 0, 0, 0.5);">
-            <a style="color: black; margin-right: 16px;" href="{% url 'index' %}">Website</a>
-            <a style="color: black;" href="{{ canonical_url }}{% url 'dashboard' %}">Dashboard</a>
+            <a style="color: black; margin-right: 16px;" href="{% url 'index' %}">website</a>
+            <a style="color: black;" href="{{ canonical_url }}{% url 'dashboard' %}">dashboard</a>
         </div>
         {% endif %}
 
         {# Logged in user, on dashboard #}
         {% if request.user.is_authenticated and not request.subdomain %}
         <div style="background: white; text-align: center; box-shadow: 0 -5px 8px rgba(0, 0, 0, 0.5);">
-            <a style="color: black; margin-right: 16px;" href="{% url 'index' %}">Website</a>
-            <a style="color: black;" href="{{ canonical_url }}{% url 'dashboard' %}">Dashboard</a>
+            <a style="color: black; margin-right: 16px;" href="{% url 'index' %}">website</a>
+            <a style="color: black;" href="{{ canonical_url }}{% url 'dashboard' %}">dashboard</a>
         </div>
         {% endif %}
 

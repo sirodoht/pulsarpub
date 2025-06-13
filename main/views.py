@@ -74,10 +74,19 @@ def index(request):
                         },
                     )
             else:
-                # inside this else: user is in another website
+                # inside this else: user is not on logged in and on their website
                 if request.account_user.home is None:
-                    # user has no home, let's ignore them
-                    return redirect("//" + settings.CANONICAL_HOST + reverse("index"))
+                    # this website has no home, serve empty home
+                    return render(
+                        request,
+                        "main/home_empty.html",
+                        {
+                            "account_user": request.account_user,
+                            "page_list": models.Page.objects.filter(
+                                user=request.account_user
+                            ).defer("body"),
+                        },
+                    )
                 else:
                     # user has home set, show it to visitor
                     return render(
@@ -160,7 +169,7 @@ class UserCreate(CreateView):
 
 class Logout(DjLogoutView):
     def dispatch(self, request, *args, **kwargs):
-        messages.info(request, "logged out")
+        messages.info(request, "log out success")
         return super().dispatch(request, *args, **kwargs)
 
 

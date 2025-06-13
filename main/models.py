@@ -59,7 +59,10 @@ class Page(models.Model):
 
     @property
     def body_as_html(self):
-        markdown = mistune.create_markdown(plugins=["task_lists", "footnotes"])
+        markdown = mistune.create_markdown(
+            escape=False,
+            plugins=["task_lists", "footnotes"],
+        )
         return markdown(self.body)
 
     def __str__(self):
