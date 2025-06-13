@@ -43,7 +43,7 @@ jobs:
     - name: Run tests
       run: |
         uv run manage.py collectstatic --noinput
-        python manage.py test
+        uv run manage.py test
       env:
         DEBUG: '1'
         SECRET_KEY: 'thisisthesecretkey'
