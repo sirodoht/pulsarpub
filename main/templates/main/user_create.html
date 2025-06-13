@@ -11,46 +11,46 @@
 
         <p>
             <label for="id_username">{{ form.username.label|lower }}</label>
+            {{ form.username }}
             {% if form.username.errors %}
                 {% for error in form.username.errors %}
                     <span class="form-error">{{ error|escape }}</span><br>
                 {% endfor %}
             {% endif %}
-            {{ form.username }}
             <span class="helptext">subdomain will be in the form username.pulsar.pub</span>
         </p>
 
         <p>
             <label for="id_email">{{ form.email.label|lower }}</label>
+            {{ form.email }}
             {% if form.email.errors %}
                 {% for error in form.email.errors %}
                     <span class="form-error">{{ error|escape }}</span><br>
                 {% endfor %}
             {% endif %}
-            {{ form.email }}
             <span class="helptext">{{ form.email.help_text }}</span>
         </p>
 
         <p>
             <label for="id_password1">{{ form.password1.label|lower }}</label>
+            {{ form.password1 }}
             {% if form.password1.errors %}
                 {% for error in form.password1.errors %}
                     <span class="form-error">{{ error|escape }}</span><br>
                 {% endfor %}
             {% endif %}
-            {{ form.password1 }}
         </p>
         {# this goes outside p element because it contains a ul element #}
         <span class="helptext">{{ form.password1.help_text|lower }}</span>
 
         <p>
             <label for="id_password2">password again</label>
+            {{ form.password2 }}
             {% if form.password2.errors %}
                 {% for error in form.password2.errors %}
                     <span class="form-error">{{ error|escape }}</span><br>
                 {% endfor %}
             {% endif %}
-            {{ form.password2 }}
             <span class="helptext">{{ form.password2.help_text }}</span>
         </p>
 
@@ -59,13 +59,7 @@
         <input type="submit" value="sign up">
 
         <p id="js-certificate" style="display: none; color: #757575; border: 1px dashed #757575; padding: 4px 8px;">
-            Issuing certificate for subdomain... (this will take 10 seconds)
-            <br>
-            <br>
-            While waiting, why not learn a fun fact? Dukkha is "du-" (bad, difficult),
-            and "kha" means empty. One of the original meanings refers to an empty axle
-            hole of a wheel, in which case you get a very bumpy ride. An apt metaphor
-            for the ride through samsara!
+            Issuing certificate for subdomain... (this will take 3 seconds)
         </p>
     </form>
 </main>
@@ -74,7 +68,7 @@
 {% block scripts %}
 <script>
     document.querySelector('form').onsubmit = function (event) {
-        document.getElementById('js-certificate').style.display = 'block';
+        setTimeout(() => document.getElementById('js-certificate').style.display = 'block', 1000);
     };
 </script>
 {% endblock scripts %}

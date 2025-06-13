@@ -18,7 +18,7 @@ class UserUpdateForm(forms.ModelForm):
             "email",
             "show_nav",
             "website_title",
-            "index_body",
+            "homepage",
         ]
 
 

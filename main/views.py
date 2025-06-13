@@ -19,10 +19,11 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     FormView,
+    TemplateView,
     UpdateView,
 )
 
-from main import forms, models
+from main import denylist, forms, models
 
 
 @login_required
@@ -112,12 +113,16 @@ class OnboardingTitle(LoginRequiredMixin, UpdateView):
 
 class OnboardingBody(LoginRequiredMixin, UpdateView):
     model = models.User
-    fields = ["index_body"]
+    fields = ["homepage"]
     template_name = "main/onboarding_body.html"
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("onboarding_page")
 
     def get_object(self):
         return self.request.user
+
+
+class OnboardingDone(LoginRequiredMixin, TemplateView):
+    template_name = "main/onboarding_done.html"
 
 
 # Users and user settings
@@ -129,10 +134,13 @@ class UserCreate(CreateView):
     template_name = "main/user_create.html"
 
     def form_valid(self, form):
+        if form.cleaned_data["username"] in denylist.DISALLOWED_USERNAMES:
+            form.add_error("username", "username unavailable")
+            return self.render_to_response(self.get_context_data(form=form))
         self.object = form.save()
         user = authenticate(
-            username=form.cleaned_data.get("username"),
-            password=form.cleaned_data.get("password1"),
+            username=form.cleaned_data["username"],
+            password=form.cleaned_data["password1"],
         )
         login(self.request, user)
         return HttpResponseRedirect(self.get_success_url())
@@ -177,8 +185,8 @@ def dashboard(request):
 
 class IndexBodyUpdate(LoginRequiredMixin, UpdateView):
     model = models.User
-    fields = ["index_body"]
-    template_name = "main/index_body_update.html"
+    fields = ["homepage"]
+    template_name = "main/homepage_update.html"
     success_url = reverse_lazy("index")
 
     def get_object(self):

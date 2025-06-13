@@ -7,25 +7,27 @@
 {% include 'partials/nav.html' %}
 
 <main>
-    <h1>Title: ✅</h1>
+    <h1>add home page content</h1>
 
     <p>
-        Awesome! Let's add a little bit of home page text.
+        Great! Now, let's add some content for the home page.
     </p>
     <p>
-        It can be something like "hi, this is tim", or it can also be empty. Don't be
-        limited by the conventions set by all other websites.
+        Start with something small. One sentence is enough.
+    </p>
+    <p>
+        What is this website about?
     </p>
 
     <form method="post">
-        {% if form.index_body.errors %}
-            {% for error in form.index_body.errors %}
+        {% if form.homepage.errors %}
+            {% for error in form.homepage.errors %}
                 <span class="form-error">{{ error|escape }}</span><br>
             {% endfor %}
         {% endif %}
-        <textarea name="index_body" id="id_index_body" cols="60" rows="10"># Hi, it's Tim!
+        <textarea name="homepage" id="id_homepage" cols="60" rows="10"># {{ request.user.username }}
 
-I like bowling.
+Hi there! This website is about...
 </textarea>
         {% csrf_token %}
         <input type="submit" value="save & continue" style="margin-top: 16px;">

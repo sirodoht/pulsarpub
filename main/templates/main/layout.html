@@ -19,7 +19,7 @@
             nav {
                 max-width: var(--total-width);
                 margin: 0 auto;
-                padding: 16px 0 8px;
+                padding: 16px 8px 0;
             }
             nav a:hover { text-decoration: underline; }
             .system nav { text-align: right; }
@@ -27,7 +27,7 @@
             .system nav a:hover { text-decoration: none; background: #ffb6b636; }
 
             /* sections */
-            main { max-width: var(--total-width); margin: 0 auto; }
+            main { max-width: var(--total-width); margin: 0 auto; padding: 0 8px; }
             aside {
                 max-width: var(--total-width);
                 margin: 16px auto 0;
@@ -55,8 +55,9 @@
                 padding: 3px 6px;
             }
             input[type="submit"]:hover { background: #fee; border: 1px solid #a0a0a0; }
-            textarea { width: 100%; }
+            textarea { width: 100%; box-sizing: border-box; }
             .helptext { color: #757575; }
+            .form-error { color: red; text-transform: lowercase; }
             .form-inline { display: inline-block; }
             .form-inline input[type="submit"] {
                 border: none;
@@ -81,7 +82,7 @@
             <a style="color: black; margin-right: 16px;" href="{% url 'index' %}">website</a>
             <a style="color: black; margin-right: 16px;" href="{{ canonical_url }}{% url 'dashboard' %}">dashboard</a>
             {% if request.path == "/" %}
-            <a style="color: black;" href="{{ canonical_url }}{% url 'index_body_update' %}">edit home page</a>
+            <a style="color: black;" href="{{ canonical_url }}{% url 'homepage_update' %}">edit home page</a>
             {% elif "/edit/" not in request.path %}
             <a style="color: black;" href="edit/">edit this page</a>
             {% endif %}
@@ -93,7 +94,7 @@
         <div style="background: white; text-align: center; box-shadow: 0 -5px 8px rgba(0, 0, 0, 0.5);">
             <a style="color: black; margin-right: 16px;" href="{% url 'index' %}">website</a>
             <a style="color: black; margin-right: 16px;" href="{{ canonical_url }}{% url 'dashboard' %}">dashboard</a>
-            <a style="color: black;" href="{{ canonical_url }}{% url 'index_body_update' %}">edit home page</a>
+            <a style="color: black;" href="{{ canonical_url }}{% url 'homepage_update' %}">edit home page</a>
         </div>
         {% endif %}
 

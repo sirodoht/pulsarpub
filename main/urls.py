@@ -10,9 +10,9 @@ urlpatterns = [
     path("dashboard/css/", views.CSSUpdate.as_view(), name="css_update"),
     path("dashboard/markdown/", views.markdown, name="markdown"),
     path(
-        "dashboard/index-body/",
+        "dashboard/homepage/",
         views.IndexBodyUpdate.as_view(),
-        name="index_body_update",
+        name="homepage_update",
     ),
     path("contact/", views.Contact.as_view(), name="contact"),
 ]
@@ -21,6 +21,7 @@ urlpatterns = [
 urlpatterns += [
     path("onboarding/title/", views.OnboardingTitle.as_view(), name="onboarding_title"),
     path("onboarding/body/", views.OnboardingBody.as_view(), name="onboarding_body"),
+    path("onboarding/done/", views.OnboardingDone.as_view(), name="onboarding_done"),
 ]
 
 # User system

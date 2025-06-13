@@ -31,7 +31,7 @@ class User(AbstractUser):
     contact = models.BooleanField("Enable Contact page", default=False)
 
     website_title = models.CharField(max_length=500, blank=True, null=True)
-    index_body = models.TextField(blank=True, null=True, default="")
+    homepage = models.TextField(blank=True, null=True, default="")
     show_nav = models.BooleanField(default=True)
 
     @property
@@ -39,12 +39,12 @@ class User(AbstractUser):
         return f"{settings.PROTOCOL}//{self.username}.{settings.CANONICAL_HOST}"
 
     @property
-    def index_body_as_html(self):
+    def homepage_as_html(self):
         markdown = mistune.create_markdown(
             escape=False,
             plugins=["task_lists", "footnotes"],
         )
-        return markdown(self.index_body)
+        return markdown(self.homepage)
 
     def __str__(self):
         return self.username
