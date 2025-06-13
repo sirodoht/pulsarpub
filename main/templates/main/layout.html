@@ -2,12 +2,13 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>{% block title %}dukkha{% endblock %}</title>
+        <title>{% block title %}dukkha.pub{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             /* general */
             body { font-family: sans-serif; line-height: 1.5; margin: 0; }
-            h1 { font-weight: normal; margin: 16px 0 8px; }
+            h1 { font-weight: normal; margin: 16px 0; }
+            h2 { font-weight: normal; margin: 16px 0; }
             a { color: #c6521e; text-decoration: none; }
             a:hover { text-decoration: underline; }
 
@@ -16,19 +17,18 @@
                 max-width: 500px;
                 margin: 0 auto;
                 text-align: right;
-                padding: 16px 0;
+                padding: 16px 0 8px;
             }
             nav a {
-              margin: 8px;
-              text-decoration: none;
-              color: #3c4858;
+                padding: 8px;
             }
             nav a:hover {
-              color: #516176;
+                text-decoration: none;
+                background: #ffb6b636;
             }
 
             /* sections */
-            main { max-width: 500px; margin: 0 auto; margin: 16px auto; }
+            main { max-width: 500px; margin: 0 auto; }
             aside { max-width: 500px; margin: 8px auto; border: 1px dashed black; padding: 0 8px; }
             img { width: 100%; }
 
@@ -80,9 +80,9 @@
         {# Logged out, on landing #}
         {% if not request.user.is_authenticated and not request.subdomain %}
         <nav>
-            <a href="{% url 'index' %}">Home</a>
-            | <a href="{% url 'user_create' %}">Sign up</a>
-            | <a href="{% url 'login' %}">Log in</a>
+            <a href="{% url 'index' %}">home</a>
+            <a href="{% url 'user_create' %}">sign up</a>
+            <a href="{% url 'login' %}">log in</a>
         </nav>
         {% endif %}
 

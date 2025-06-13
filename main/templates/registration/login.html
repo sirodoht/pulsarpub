@@ -1,6 +1,6 @@
 {% extends 'main/layout.html' %}
 
-{% block title %}Log in{% endblock %}
+{% block title %}log in for dukkha{% endblock %}
 
 {% block content %}
 <main>
@@ -13,24 +13,24 @@
         {% endif %}
     {% endif %}
 
-    <h1>Log in</h1>
+    <h1>log in</h1>
 
     <form method="post">
         {{ form.non_field_errors }}
 
         <p>
-            <label for="id_username">{{ form.username.label }}</label>
+            <label for="id_username">{{ form.username.label|lower }}</label>
             {% if form.username.errors %}
                 {% for error in form.username.errors %}
                     <span class="form-error">{{ error|escape }}</span><br>
                 {% endfor %}
             {% endif %}
             {{ form.username }}
-            <span class="helptext">This is your website subdomain.</span>
+            <span class="helptext">this is your website subdomain</span>
         </p>
 
         <p>
-            <label for="id_password">{{ form.password.label }}</label>
+            <label for="id_password">{{ form.password.label|lower }}</label>
             {% if form.password.errors %}
                 {% for error in form.password.errors %}
                     <span class="form-error">{{ error|escape }}</span><br>
@@ -46,7 +46,7 @@
     </form>
 
     <p>
-        <a href="{% url 'password_reset' %}">Forgot password?</a>
+        <a href="{% url 'password_reset' %}">did you forget your password?</a>
     </p>
 </main>
 {% endblock content %}

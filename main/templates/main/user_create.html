@@ -1,27 +1,27 @@
 {% extends 'main/layout.html' %}
 
-{% block title %}Sign up{% endblock %}
+{% block title %}sign up for dukkha.pub{% endblock %}
 
 {% block content %}
 <main>
-    <h1>Sign up</h1>
+    <h1>sign up</h1>
 
     <form method="post">
         {{ form.non_field_errors }}
 
         <p>
-            <label for="id_username">{{ form.username.label }}</label>
+            <label for="id_username">{{ form.username.label|lower }}</label>
             {% if form.username.errors %}
             {% for error in form.username.errors %}
             <span class="form-error">{{ error|escape }}</span><br>
                 {% endfor %}
                 {% endif %}
                 {{ form.username }}
-            <span class="helptext">{{ form.username.help_text }}</span>
+            <span class="helptext">{{ form.username.help_text|lower }}</span>
         </p>
 
         <p>
-            <label for="id_website_title">{{ form.website_title.label }}</label>
+            <label for="id_website_title">{{ form.website_title.label|lower }}</label>
             {% if form.website_title.errors %}
             {% for error in form.website_title.errors %}
             <span class="form-error">{{ error|escape }}</span><br>
@@ -32,7 +32,7 @@
         </p>
 
         <p>
-            <label for="id_email">{{ form.email.label }}</label>
+            <label for="id_email">{{ form.email.label|lower }}</label>
             {% if form.email.errors %}
                 {% for error in form.email.errors %}
                     <span class="form-error">{{ error|escape }}</span><br>
@@ -43,7 +43,7 @@
         </p>
 
         <p>
-            <label for="id_password1">{{ form.password1.label }}</label>
+            <label for="id_password1">{{ form.password1.label|lower }}</label>
             {% if form.password1.errors %}
                 {% for error in form.password1.errors %}
                     <span class="form-error">{{ error|escape }}</span><br>
@@ -52,10 +52,10 @@
             {{ form.password1 }}
         </p>
         {# this goes outside p element because it contains a ul element #}
-        <span class="helptext">{{ form.password1.help_text }}</span>
+        <span class="helptext">{{ form.password1.help_text|lower }}</span>
 
         <p>
-            <label for="id_password2">{{ form.password2.label }}</label>
+            <label for="id_password2">password again</label>
             {% if form.password2.errors %}
                 {% for error in form.password2.errors %}
                     <span class="form-error">{{ error|escape }}</span><br>
