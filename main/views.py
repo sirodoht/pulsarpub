@@ -115,7 +115,7 @@ class OnboardingBody(LoginRequiredMixin, UpdateView):
     model = models.User
     fields = ["homepage"]
     template_name = "main/onboarding_body.html"
-    success_url = reverse_lazy("onboarding_page")
+    success_url = reverse_lazy("onboarding_done")
 
     def get_object(self):
         return self.request.user
