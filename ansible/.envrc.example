@@ -18,13 +18,19 @@ export DEBUG=1
 # Set localhost on settings instead of domain name
 # 1: set localhost
 # 0: set production domain name
-export LOCALDEV=1
+export LOCALDEV=0
 
 # Used by Django to encrypt session login cookies
 export SECRET_KEY=
+
+# Use SQLite instead of PostgreSQL
+# 1: use SQLITE
+# 0 or any other value: use PostgreSQL (recommended for production)
+export SQLITE=0
 
 # PostgreSQL database password
 export POSTGRES_PASSWORD=password
 
 # PostgreSQL database connection string
+# "password" must be the same as POSTGRES_PASSWORD above
 export DATABASE_URL=postgres://pulsar:password@localhost:5432/pulsar

@@ -105,7 +105,7 @@
     # repository
     - name: clone
       ansible.builtin.git:
-        repo: git@github.com:sirodoht/pulsarpub.git
+        repo: https://github.com/sirodoht/pulsarpub
         dest: /var/www/pulsar
         version: main
         accept_hostkey: true
