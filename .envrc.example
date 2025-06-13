@@ -17,4 +17,4 @@ export SECRET_KEY=
 export SQLITE=0
 
 # PostgreSQL database connection string
-export DATABASE_URL=postgres://dukkha:@localhost:5432/dukkha
+export DATABASE_URL=postgres://pulsar:@localhost:5432/pulsar

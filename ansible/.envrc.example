@@ -27,4 +27,4 @@ export SECRET_KEY=
 export POSTGRES_PASSWORD=password
 
 # PostgreSQL database connection string
-export DATABASE_URL=postgres://dukkha:password@localhost:5432/dukkha
+export DATABASE_URL=postgres://pulsar:password@localhost:5432/pulsar

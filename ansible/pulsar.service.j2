@@ -1,13 +1,13 @@
 [Unit]
-Description=dukkha
+Description=pulsar
 After=network.target
 
 [Service]
 Type=simple
 User=deploy
 Group=www-data
-WorkingDirectory=/var/www/dukkha
-ExecStart=/var/www/dukkha/.venv/bin/gunicorn -b 127.0.0.1:5000 -w 4 --access-logfile - dukkha.wsgi
+WorkingDirectory=/var/www/pulsar
+ExecStart=/var/www/pulsar/.venv/bin/gunicorn -b 127.0.0.1:5000 -w 4 --access-logfile - pulsar.wsgi
 ExecReload=/bin/kill -HUP $MAINPID
 Environment="DATABASE_URL={{ database_url }}"
 Environment="DEBUG={{ debug }}"

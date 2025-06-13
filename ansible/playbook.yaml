@@ -76,23 +76,23 @@
     # postgresql setup
     - name: pg user
       community.general.postgresql_user:
-        name: dukkha
+        name: pulsar
         password: "{{ postgres_password }}"
         expires: infinity
         state: present
       become_user: postgres
     - name: pg database
       community.general.postgresql_db:
-        name: dukkha
-        owner: dukkha
+        name: pulsar
+        owner: pulsar
         state: present
       become_user: postgres
     - name: pg permissions
       community.postgresql.postgresql_privs:
-        db: dukkha
+        db: pulsar
         privs: ALL
         objs: ALL_IN_SCHEMA
-        role: dukkha
+        role: pulsar
         grant_option: true
       become_user: postgres
 
@@ -105,8 +105,8 @@
     # repository
     - name: clone
       ansible.builtin.git:
-        repo: git@github.com:dukkhapub/dukkha.git
-        dest: /var/www/dukkha
+        repo: git@github.com:sirodoht/pulsarpub.git
+        dest: /var/www/pulsar
         version: main
         accept_hostkey: true
       become_user: deploy
@@ -114,8 +114,8 @@
     # systemd
     - name: systemd main service
       ansible.builtin.template:
-        src: dukkha.service.j2
-        dest: /etc/systemd/system/dukkha.service
+        src: pulsar.service.j2
+        dest: /etc/systemd/system/pulsar.service
         owner: root
         group: root
         mode: '0644'
@@ -124,11 +124,11 @@
         daemon_reload: true
     - name: systemd enable
       ansible.builtin.systemd:
-        name: dukkha
+        name: pulsar
         enabled: yes
     - name: systemd start
       ansible.builtin.systemd:
-        name: dukkha
+        name: pulsar
         state: restarted
 
     # deployment specific
@@ -137,7 +137,7 @@
         cmd: |
           source $HOME/.local/bin/env
           uv run manage.py collectstatic --no-input
-        chdir: /var/www/dukkha
+        chdir: /var/www/pulsar
       args:
         executable: /bin/bash
       become_user: deploy
@@ -147,13 +147,13 @@
           source $HOME/.local/bin/env
           export DATABASE_URL={{ database_url }}
           uv run manage.py migrate --no-input
-        chdir: /var/www/dukkha
+        chdir: /var/www/pulsar
       args:
         executable: /bin/bash
       become_user: deploy
     - name: gunicorn restart
       ansible.builtin.systemd:
-        name: dukkha
+        name: pulsar
         state: restarted
     - name: caddy restart
       ansible.builtin.systemd:

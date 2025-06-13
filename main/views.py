@@ -82,7 +82,7 @@ def domain_check(request):
     if models.User.objects.filter(custom_domain=url).exists():
         return HttpResponse()
 
-    # Subdomain case, can only by <username>.dukkha.pub
+    # Subdomain case, can only by <username>.pulsar.pub
     if len(url.split(".")) != 3:
         raise PermissionDenied()
 

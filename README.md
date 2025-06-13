@@ -1,4 +1,4 @@
-# dukkha
+# pulsarpub
 
 Custom websites without too much suffering.
 
@@ -7,7 +7,7 @@ Custom websites without too much suffering.
 This is a standard [Django](https://docs.djangoproject.com/) application with
 [uv](https://github.com/astral-sh/uv).
 
-1. Set up a new postgresql database called `dukkha` with a user `dukkha` and no
+1. Set up a new postgresql database called `pulsar` with a user `pulsar` and no
 password.
 
 2. Setup environment variables with:

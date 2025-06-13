@@ -25,7 +25,7 @@ def host_middleware(get_response):
         canonical_parts = settings.CANONICAL_HOST.split(".")
         logger.debug(f"{settings.CANONICAL_HOST=}")
 
-        # [1] Handle dukkha.pub landing and dashboard pages. All dashboard pages (ie.
+        # [1] Handle pulsar.pub landing and dashboard pages. All dashboard pages (ie.
         # all user account settings etc.) are on the root domain.
         # Strategy: don't set request.subdomain, return immediately.
         if host == settings.CANONICAL_HOST:
@@ -40,11 +40,11 @@ def host_middleware(get_response):
             logger.debug("host midd case [2]")
             return get_response(request)
 
-        # [3] Handle <subdomain>.dukkha.pub pages.
+        # [3] Handle <subdomain>.pulsar.pub pages.
         # Strategy: Set subdomain to given subdomain.
         elif (
             len(host_parts) == 3
-            and host_parts[1] == canonical_parts[0]  # should be "dukkha"
+            and host_parts[1] == canonical_parts[0]  # should be "pulsar"
             and host_parts[2] == canonical_parts[1]  # should be "blog"
         ):
             logger.debug("host midd case [3]")
