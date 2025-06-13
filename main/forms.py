@@ -3,8 +3,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm as DjUserCreationForm
 from django.core import validators as dj_validators
 
-from main import models
-
 
 class UserCreationForm(DjUserCreationForm):
     class Meta:
@@ -13,19 +11,14 @@ class UserCreationForm(DjUserCreationForm):
 
 
 class UserUpdateForm(forms.ModelForm):
-    home = forms.ModelChoiceField(
-        queryset=models.Page.objects.all(),
-        required=False,
-        empty_label="No home page",
-    )
-
     class Meta:
         model = get_user_model()
         fields = [
             "username",
             "email",
+            "show_nav",
             "website_title",
-            "home",
+            "index_body",
         ]
 
 

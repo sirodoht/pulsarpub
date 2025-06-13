@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LogoutView as DjLogoutView
 from django.core.exceptions import PermissionDenied
 from django.http import (
     Http404,
@@ -40,70 +39,21 @@ def index(request):
         # check if subdomain is valid
         if models.User.objects.filter(username=request.subdomain).exists():
             # check if user is logged in and on their own website
-            if request.user.is_authenticated and request.user == request.account_user:
-                # check if user has set their home page
-                if request.account_user.home is not None:
-                    return render(
-                        request,
-                        "main/page_detail.html",
-                        {
-                            "page": models.Page.objects.get(
-                                id=request.account_user.home.id
-                            ),
-                            "canonical_url": f"{settings.PROTOCOL}//{settings.CANONICAL_HOST}",
-                            "subdomain": request.subdomain,
-                            "account_user": request.account_user,
-                            "page_list": models.Page.objects.filter(
-                                user=request.account_user
-                            ).defer("body"),
-                        },
-                    )
-                else:
-                    # inside this else: user is logged in and in their website but has
-                    # not set their home page
-                    return render(
-                        request,
-                        "main/home_placeholder.html",
-                        {
-                            "canonical_url": f"{settings.PROTOCOL}//{settings.CANONICAL_HOST}",
-                            "subdomain": request.subdomain,
-                            "account_user": request.account_user,
-                            "page_list": models.Page.objects.filter(
-                                user=request.account_user
-                            ).defer("body"),
-                        },
-                    )
-            else:
-                # inside this else: user is not on logged in and on their website
-                if request.account_user.home is None:
-                    # this website has no home, serve empty home
-                    return render(
-                        request,
-                        "main/home_empty.html",
-                        {
-                            "account_user": request.account_user,
-                            "page_list": models.Page.objects.filter(
-                                user=request.account_user
-                            ).defer("body"),
-                        },
-                    )
-                else:
-                    # user has home set, show it to visitor
-                    return render(
-                        request,
-                        "main/page_detail.html",
-                        {
-                            "page": models.Page.objects.get(
-                                id=request.account_user.home.id
-                            ),
-                            "canonical_url": f"{settings.PROTOCOL}//{settings.CANONICAL_HOST}",
-                            "subdomain": request.subdomain,
-                            "account_user": request.account_user,
-                            "page_list": models.Page.objects.filter(
-                                user=request.account_user
-                            ).defer("body"),
-                        },
-                    )
+            if request.user.is_authenticated and request.user == request.account_user:  # noqa: SIM102
+                # check if user has set website title
+                if request.user.website_title is None:
+                    return redirect("onboarding_title")
+            return render(
+                request,
+                "main/account_index.html",
+                {
+                    "canonical_url": f"{settings.PROTOCOL}//{settings.CANONICAL_HOST}",
+                    "account_user": request.account_user,
+                    "page_list": models.Page.objects.filter(
+                        user=request.account_user
+                    ).defer("body"),
+                },
+            )
 
     # Account site as owner:
     # Redirect to "account_index" so that the requests gets a subdomain
@@ -147,13 +97,35 @@ def markdown(request):
     return render(request, "main/markdown.html")
 
 
+# Onboarding
+
+
+class OnboardingTitle(LoginRequiredMixin, UpdateView):
+    model = models.User
+    fields = ["website_title"]
+    template_name = "main/onboarding_title.html"
+    success_url = reverse_lazy("onboarding_body")
+
+    def get_object(self):
+        return self.request.user
+
+
+class OnboardingBody(LoginRequiredMixin, UpdateView):
+    model = models.User
+    fields = ["index_body"]
+    template_name = "main/onboarding_body.html"
+    success_url = reverse_lazy("index")
+
+    def get_object(self):
+        return self.request.user
+
+
 # Users and user settings
 
 
 class UserCreate(CreateView):
     form_class = forms.UserCreationForm
-    success_message = "welcome :)"
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("onboarding_title")
     template_name = "main/user_create.html"
 
     def form_valid(self, form):
@@ -163,14 +135,7 @@ class UserCreate(CreateView):
             password=form.cleaned_data.get("password1"),
         )
         login(self.request, user)
-        messages.success(self.request, self.success_message)
         return HttpResponseRedirect(self.get_success_url())
-
-
-class Logout(DjLogoutView):
-    def dispatch(self, request, *args, **kwargs):
-        messages.info(request, "log out success")
-        return super().dispatch(request, *args, **kwargs)
 
 
 class UserUpdate(LoginRequiredMixin, UpdateView):
@@ -180,13 +145,6 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         return self.request.user
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["home"].queryset = models.Page.objects.filter(
-            user=self.request.user
-        )
-        return form
 
 
 class CSSUpdate(LoginRequiredMixin, UpdateView):
@@ -212,6 +170,19 @@ def dashboard(request):
             "blog_url": request.user.blog_url,
         },
     )
+
+
+# Index
+
+
+class IndexBodyUpdate(LoginRequiredMixin, UpdateView):
+    model = models.User
+    fields = ["index_body"]
+    template_name = "main/index_body_update.html"
+    success_url = reverse_lazy("index")
+
+    def get_object(self):
+        return self.request.user
 
 
 # Pages
@@ -397,7 +368,7 @@ async def image_raw(request, slug, extension):
 class ImageUpdate(LoginRequiredMixin, UpdateView):
     model = models.Image
     fields = ["name"]
-    template_name = "main/image_edit.html"
+    template_name = "main/image_update.html"
 
     def dispatch(self, request, *args, **kwargs):
         image = self.get_object()

@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LogoutView
 from django.urls import include, path, re_path
 
 from main import views
@@ -6,14 +7,25 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("dashboard/landing/", views.landing, name="landing"),
-    path("css/update/", views.CSSUpdate.as_view(), name="css_update"),
+    path("dashboard/css/", views.CSSUpdate.as_view(), name="css_update"),
     path("dashboard/markdown/", views.markdown, name="markdown"),
+    path(
+        "dashboard/index-body/",
+        views.IndexBodyUpdate.as_view(),
+        name="index_body_update",
+    ),
     path("contact/", views.Contact.as_view(), name="contact"),
+]
+
+# Onboarding
+urlpatterns += [
+    path("onboarding/title/", views.OnboardingTitle.as_view(), name="onboarding_title"),
+    path("onboarding/body/", views.OnboardingBody.as_view(), name="onboarding_body"),
 ]
 
 # User system
 urlpatterns += [
-    path("accounts/logout/", views.Logout.as_view(), name="logout"),
+    path("accounts/logout/", LogoutView.as_view(), name="logout"),
     path("accounts/", include("django.contrib.auth.urls")),
     path(
         "accounts/create/",

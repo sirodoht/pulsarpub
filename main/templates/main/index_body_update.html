@@ -1,0 +1,27 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Onboarding{% endblock %}
+
+{% block content %}
+
+{% if account_user.show_nav %}
+{% include 'partials/nav.html' %}
+{% endif %}
+
+<main>
+    <h1>Edit home page</h1>
+
+    <form method="post">
+        {% if form.index_body.errors %}
+            {% for error in form.index_body.errors %}
+                <span class="form-error">{{ error|escape }}</span><br>
+            {% endfor %}
+        {% endif %}
+        <textarea name="index_body" id="id_index_body" cols="60" rows="10" style="min-height: 200px; height: calc(100vh - 450px);">{{ form.index_body.value }}</textarea>
+
+        {% csrf_token %}
+        <input type="submit" value="save" style="margin-top: 16px;">
+    </form>
+</main>
+
+{% endblock content %}

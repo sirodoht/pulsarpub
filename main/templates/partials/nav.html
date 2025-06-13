@@ -1,7 +1,7 @@
 <nav>
-    <a href="{% url 'index' %}">home</a>
+    <a href="{% url 'index' %}">Home</a>
     {% for page in page_list %}
-    <a href="{% url 'page_detail' page.slug %}">{{ page.title }}</a>
+    | <a href="{% url 'page_detail' page.slug %}">{{ page.title }}</a>
     {% endfor %}
 
     {% if request.account_user.contact %}

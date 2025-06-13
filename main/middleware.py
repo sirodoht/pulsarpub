@@ -56,7 +56,6 @@ def host_middleware(get_response):
                 raise Http404()
 
             request.account_user = models.User.objects.get(username=request.subdomain)
-            request.custom_css = request.account_user.custom_css
 
             # Redirect to custom urls for cases:
             # * Logged out / anon users

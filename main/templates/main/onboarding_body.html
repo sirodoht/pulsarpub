@@ -1,0 +1,35 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Onboarding{% endblock %}
+
+{% block content %}
+
+{% include 'partials/nav.html' %}
+
+<main>
+    <h1>Title: ✅</h1>
+
+    <p>
+        Awesome! Let's add a little bit of home page text.
+    </p>
+    <p>
+        It can be something like "hi, this is tim", or it can also be empty. Don't be
+        limited by the conventions set by all other websites.
+    </p>
+
+    <form method="post">
+        {% if form.index_body.errors %}
+            {% for error in form.index_body.errors %}
+                <span class="form-error">{{ error|escape }}</span><br>
+            {% endfor %}
+        {% endif %}
+        <textarea name="index_body" id="id_index_body" cols="60" rows="10"># Hi, it's Tim!
+
+I like bowling.
+</textarea>
+        {% csrf_token %}
+        <input type="submit" value="save & continue" style="margin-top: 16px;">
+    </form>
+</main>
+
+{% endblock content %}

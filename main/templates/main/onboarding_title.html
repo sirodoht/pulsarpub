@@ -1,0 +1,25 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Onboarding{% endblock %}
+
+{% block content %}
+
+<main>
+    <h1 style="margin-top: 32px;">welcome :)</h1>
+
+    <p>
+        Let's make a website.
+    </p>
+
+    <p>
+        Start with a title, I think that's a fun way to start something!
+    </p>
+
+    <form method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="submit" value="save">
+    </form>
+</main>
+
+{% endblock content %}

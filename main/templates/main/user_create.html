@@ -12,23 +12,12 @@
         <p>
             <label for="id_username">{{ form.username.label|lower }}</label>
             {% if form.username.errors %}
-            {% for error in form.username.errors %}
-            <span class="form-error">{{ error|escape }}</span><br>
+                {% for error in form.username.errors %}
+                    <span class="form-error">{{ error|escape }}</span><br>
                 {% endfor %}
-                {% endif %}
-                {{ form.username }}
-            <span class="helptext">{{ form.username.help_text|lower }}</span>
-        </p>
-
-        <p>
-            <label for="id_website_title">{{ form.website_title.label|lower }}</label>
-            {% if form.website_title.errors %}
-            {% for error in form.website_title.errors %}
-            <span class="form-error">{{ error|escape }}</span><br>
-                {% endfor %}
-                {% endif %}
-                {{ form.website_title }}
-            <span class="helptext">{{ form.website_title.help_text }}</span>
+            {% endif %}
+            {{ form.username }}
+            <span class="helptext">subdomain will be in the form username.dukkha.pub</span>
         </p>
 
         <p>

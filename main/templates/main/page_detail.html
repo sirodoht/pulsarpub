@@ -4,7 +4,9 @@
 
 {% block content %}
 
+{% if account_user.show_nav %}
 {% include 'partials/nav.html' %}
+{% endif %}
 
 <main>
     <h1>{{ page.title }}</h1>

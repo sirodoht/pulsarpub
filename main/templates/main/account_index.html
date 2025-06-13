@@ -4,9 +4,11 @@
 
 {% block content %}
 
+{% if account_user.show_nav %}
 {% include 'partials/nav.html' %}
+{% endif %}
 
 <main>
-    <h1>{{ account_user.website_title }}</h1>
+    {{ account_user.index_body_as_html|safe }}
 </main>
 {% endblock content %}
