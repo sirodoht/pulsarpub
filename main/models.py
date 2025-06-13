@@ -21,7 +21,6 @@ class User(AbstractUser):
         error_messages={"unique": "A user with that username already exists."},
     )
     email = models.EmailField(unique=True)
-    website_title = models.CharField(max_length=500, blank=True, null=True)
     custom_domain = models.CharField(
         max_length=150,
         blank=True,
@@ -30,16 +29,22 @@ class User(AbstractUser):
     )
     custom_css = models.TextField("Custom CSS", blank=True, null=True, default="")
     contact = models.BooleanField("Enable Contact page", default=False)
-    home = models.ForeignKey(
-        "Page",
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="home",
-    )
+
+    website_title = models.CharField(max_length=500, blank=True, null=True)
+    index_body = models.TextField(blank=True, null=True, default="")
+    show_nav = models.BooleanField(default=True)
 
     @property
     def blog_url(self):
         return f"{settings.PROTOCOL}//{self.username}.{settings.CANONICAL_HOST}"
+
+    @property
+    def index_body_as_html(self):
+        markdown = mistune.create_markdown(
+            escape=False,
+            plugins=["task_lists", "footnotes"],
+        )
+        return markdown(self.index_body)
 
     def __str__(self):
         return self.username
