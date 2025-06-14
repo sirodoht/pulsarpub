@@ -18,7 +18,7 @@ class UserUpdateForm(forms.ModelForm):
             "email",
             "show_nav",
             "website_title",
-            "homepage",
+            "custom_domain",
         ]
 
 
@@ -52,3 +52,11 @@ class ContactForm(forms.Form):
     name = forms.CharField()
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
+
+
+class SubscriptionForm(forms.Form):
+    pass
+
+
+class CancelSubscriptionForm(forms.Form):
+    pass

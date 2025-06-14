@@ -1,0 +1,37 @@
+{% extends "main/layout.html" %}
+
+{% block title %}Subscription Dashboard - pulsar.pub{% endblock %}
+
+{% block content %}
+<main>
+    <h1>subscription</h1>
+
+    {% if user.is_premium %}
+        <div>
+            <p>currently on premium plan</p>
+            {% if user.subscription_end_date %}
+                <p>plan auto-renews on {{ user.subscription_end_date|date:"M d, Y" }}</p>
+            {% endif %}
+
+            <a href="{% url 'subscription_cancel' %}">
+                cancel subscription
+            </a>
+        </div>
+    {% else %}
+        <div>
+            <p>
+                Pulsar is currently for free but will become paid soon.
+            </p>
+
+            <form action="{% url 'create_checkout_session' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="subscribe to premium">
+            </form>
+        </div>
+    {% endif %}
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}

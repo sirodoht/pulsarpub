@@ -34,3 +34,9 @@ export POSTGRES_PASSWORD=password
 # PostgreSQL database connection string
 # "password" must be the same as POSTGRES_PASSWORD above
 export DATABASE_URL=postgres://pulsar:password@localhost:5432/pulsar
+
+# Stripe (optional)
+export STRIPE_PUBLISHABLE_KEY=
+export STRIPE_SECRET_KEY=
+export STRIPE_WEBHOOK_SECRET=
+export STRIPE_PRICE_ID=

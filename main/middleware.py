@@ -13,6 +13,11 @@ def host_middleware(get_response):
     def middleware(request):
         logger.debug("host midd begin")
 
+        # Skip host validation for webhook endpoints
+        if request.path.startswith("/webhooks/"):
+            logger.debug("host midd: continue for webhook")
+            return get_response(request)
+
         host = request.META.get("HTTP_HOST")
         logger.debug(f"{host=}")
 

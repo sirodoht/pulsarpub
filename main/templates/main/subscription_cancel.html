@@ -1,0 +1,34 @@
+{% extends "main/layout.html" %}
+
+{% block title %}Cancel Subscription - pulsar.pub{% endblock %}
+
+{% block content %}
+<main>
+    <h1>cancel premium subscription</h1>
+
+    <div>
+        <p>your subscription will remain active until {{ user.subscription_end_date|date:"M d, Y" }}</p>
+    </div>
+
+    <form method="post">
+        {{ form.non_field_errors }}
+
+        <div style="margin: 16px 0;">
+            <label>
+                {{ form.confirm }}
+                {{ form.confirm.label }}
+            </label>
+            {% if form.confirm.errors %}
+                {% for error in form.confirm.errors %}
+                    <span class="form-error">{{ error|escape }}</span><br>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div>
+            {% csrf_token %}
+            <input type="submit" value="cancel subscription">
+        </div>
+    </form>
+</main>
+{% endblock %}

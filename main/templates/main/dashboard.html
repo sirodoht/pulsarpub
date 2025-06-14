@@ -1,6 +1,6 @@
 {% extends 'main/layout.html' %}
 
-{% block title %}Dashboard — {{ request.user.username }}{% endblock %}
+{% block title %}dashboard — pulsar.pub{% endblock %}
 
 {% block content %}
 <main>
@@ -27,6 +27,9 @@
 
         <br><a href="{% url 'css_update' %}">css</a>
         <br><a href="{% url 'image_list' %}">images</a>
+        {% if subscription_enabled %}
+        <br><a href="{% url 'subscription_index' %}">subscription</a>
+        {% endif %}
         <br><a href="{% url 'user_update' %}">settings</a>
         <br><a href="{% url 'landing' %}">landing</a>
         <br><form method="post" action="{% url 'logout' %}" class="form-inline">

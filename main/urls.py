@@ -37,6 +37,21 @@ urlpatterns += [
     path("accounts/domain/", views.domain_check, name="domain_check"),
 ]
 
+# Subscription
+urlpatterns += [
+    path("subscription/", views.subscription_index, name="subscription_index"),
+    path(
+        "subscription/checkout/",
+        views.create_checkout_session,
+        name="create_checkout_session",
+    ),
+    path(
+        "subscription/success/", views.subscription_success, name="subscription_success"
+    ),
+    path("subscription/cancel/", views.subscription_cancel, name="subscription_cancel"),
+    path("webhooks/stripe/", views.stripe_webhook, name="stripe_webhook"),
+]
+
 # Images
 urlpatterns += [
     path("images/<slug:slug>.<slug:extension>", views.image_raw, name="image_raw"),

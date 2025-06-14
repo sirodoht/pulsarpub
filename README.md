@@ -98,6 +98,31 @@ uv run ansible-playbook -v playbook.yaml
 That's it. Open your browser and visit your pulsar instance at your domain. It should
 take a few seconds to generate the TLS certificate the first time.
 
+
+### 5. Stripe Configuration
+
+Once done, you can also enable premium subscriptions. Pulsar supports Stripe.
+
+1. Create a [Stripe account](https://dashboard.stripe.com/register)
+2. Get your API keys from the Stripe Dashboard
+3. Create a subscription product and get the price ID
+4. Add the following environment variables to your `.envrc` file:
+
+```sh
+export STRIPE_PUBLISHABLE_KEY=pk_test_...
+export STRIPE_SECRET_KEY=sk_test_...
+export STRIPE_WEBHOOK_SECRET=whsec_...
+export STRIPE_PRICE_ID=price_...
+```
+
+5. Set up a webhook endpoint in Stripe Dashboard pointing to `/webhooks/stripe/`
+6. Configure the webhook to listen for these events:
+   - `customer.subscription.created`
+   - `customer.subscription.updated`
+   - `customer.subscription.deleted`
+   - `invoice.payment_succeeded`
+   - `invoice.payment_failed`
+
 ## License
 
 Symbolic Public License

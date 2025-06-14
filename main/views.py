@@ -1,5 +1,7 @@
+import logging
 import uuid
 
+import stripe
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -14,6 +16,9 @@ from django.http import (
 )
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -24,6 +29,10 @@ from django.views.generic import (
 )
 
 from main import denylist, forms, models
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -174,7 +183,7 @@ def dashboard(request):
         request,
         "main/dashboard.html",
         {
-            "page_list": models.Page.objects.filter(user=request.user),
+            "subscription_enabled": bool(settings.STRIPE_SECRET_KEY),
             "blog_url": request.user.blog_url,
         },
     )
@@ -423,3 +432,234 @@ class Contact(FormView):
                 user__username=self.request.subdomain
             )
         return context
+
+
+# Subscription
+
+
+@login_required
+def subscription_index(request):
+    if hasattr(request, "subdomain"):
+        return redirect("//" + settings.CANONICAL_HOST + reverse("subscription_index"))
+
+    return render(
+        request,
+        "main/subscription_index.html",
+        {
+            "stripe_publishable_key": settings.STRIPE_PUBLISHABLE_KEY,
+            "user": request.user,
+        },
+    )
+
+
+@login_required
+@require_POST
+def create_checkout_session(request):
+    if request.user.is_premium:
+        messages.info(request, "You already have an active premium subscription.")
+        return redirect("subscription_index")
+
+    try:
+        if not request.user.stripe_customer_id:
+            customer = stripe.Customer.create(
+                email=request.user.email,
+                metadata={
+                    "user_id": request.user.id,
+                    "username": request.user.username,
+                },
+            )
+            request.user.stripe_customer_id = customer.id
+            request.user.save()
+        else:
+            customer = stripe.Customer.retrieve(request.user.stripe_customer_id)
+        checkout_session = stripe.checkout.Session.create(
+            customer=customer.id,
+            payment_method_types=["card"],
+            line_items=[
+                {
+                    "price": settings.STRIPE_PRICE_ID,
+                    "quantity": 1,
+                }
+            ],
+            mode="subscription",
+            success_url=request.build_absolute_uri(reverse("subscription_success")),
+            cancel_url=request.build_absolute_uri(reverse("subscription_index")),
+        )
+        return redirect(checkout_session.url)
+    except Exception as e:
+        logger.error(f"Error creating checkout session: {e}")
+        messages.error(
+            request, "error processing your request, please contact admin@pulsar.pub"
+        )
+        return redirect("subscription_index")
+
+
+@login_required
+def subscription_success(request):
+    messages.success(request, "you've subscribed for pulsar premium")
+    return redirect("subscription_index")
+
+
+@login_required
+def subscription_cancel(request):
+    if request.method == "POST":
+        form = forms.CancelSubscriptionForm(request.POST)
+        if form.is_valid():
+            try:
+                if request.user.stripe_subscription_id:
+                    # cancel at period end
+                    stripe.Subscription.modify(
+                        request.user.stripe_subscription_id, cancel_at_period_end=True
+                    )
+                    messages.success(
+                        request,
+                        "your subscription will end at the end of the current billing period and will not renew",
+                    )
+                else:
+                    messages.error(request, "no active subscription found")
+            except Exception as e:
+                logger.error(f"Error canceling subscription: {e}")
+                messages.error(
+                    request,
+                    "there was an error canceling your subscription. please contact admin@pulsar.pub",
+                )
+            return redirect("subscription_index")
+    else:
+        form = forms.CancelSubscriptionForm()
+
+    return render(request, "main/subscription_cancel.html", {"form": form})
+
+
+@csrf_exempt
+@require_POST
+def stripe_webhook(request):
+    logger.info("Stripe webhook received")
+    payload = request.body
+    sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
+
+    if not settings.STRIPE_WEBHOOK_SECRET:
+        logger.error("STRIPE_WEBHOOK_SECRET not configured")
+        return HttpResponse(status=400)
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload,
+            sig_header,
+            settings.STRIPE_WEBHOOK_SECRET,
+        )
+    except ValueError as e:
+        logger.error(f"invalid payload in Stripe webhook: {e}")
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        logger.error(f"invalid signature in Stripe webhook: {e}")
+        return HttpResponse(status=400)
+
+    logger.info(f"processing webhook event: {event['type']}")
+
+    if event["type"] == "customer.subscription.created":
+        subscription = event["data"]["object"]
+        handle_subscription_created(subscription)
+    elif event["type"] == "customer.subscription.updated":
+        subscription = event["data"]["object"]
+        handle_subscription_updated(subscription)
+    elif event["type"] == "customer.subscription.deleted":
+        subscription = event["data"]["object"]
+        handle_subscription_deleted(subscription)
+    elif event["type"] == "invoice.payment_succeeded":
+        invoice = event["data"]["object"]
+        handle_payment_succeeded(invoice)
+    elif event["type"] == "invoice.payment_failed":
+        invoice = event["data"]["object"]
+        handle_payment_failed(invoice)
+    else:
+        logger.info(f"unhandled webhook event type: {event['type']}")
+
+    return HttpResponse(status=200)
+
+
+def handle_subscription_created(subscription):
+    try:
+        customer_id = subscription["customer"]
+        user = models.User.objects.get(stripe_customer_id=customer_id)
+
+        user.stripe_subscription_id = subscription["id"]
+        user.is_premium = subscription["status"] == "active"
+        user.subscription_start_date = timezone.datetime.fromtimestamp(
+            subscription["created"], tz=timezone.timezone.utc
+        )
+
+        if (
+            subscription.get("items")
+            and subscription["items"].get("data")
+            and len(subscription["items"]["data"]) > 0
+        ):
+            item = subscription["items"]["data"][0]
+            if item.get("current_period_end"):
+                user.subscription_end_date = timezone.datetime.fromtimestamp(
+                    item["current_period_end"], tz=timezone.timezone.utc
+                )
+        user.save()
+        logger.info(f"subscription created for user {user.username}")
+    except models.User.DoesNotExist:
+        logger.error(f"user not found for customer {customer_id}")
+    except Exception as e:
+        logger.error(f"error handling subscription created: {e}")
+
+
+def handle_subscription_updated(subscription):
+    try:
+        customer_id = subscription["customer"]
+        user = models.User.objects.get(stripe_customer_id=customer_id)
+        user.is_premium = subscription["status"] == "active"
+        if (
+            subscription.get("items")
+            and subscription["items"].get("data")
+            and len(subscription["items"]["data"]) > 0
+        ):
+            item = subscription["items"]["data"][0]
+            if item.get("current_period_end"):
+                user.subscription_end_date = timezone.datetime.fromtimestamp(
+                    item["current_period_end"], tz=timezone.timezone.utc
+                )
+        user.save()
+        logger.info(f"subscription updated for user {user.username}")
+    except models.User.DoesNotExist:
+        logger.error(f"user not found for customer {customer_id}")
+    except Exception as e:
+        logger.error(f"error handling subscription updated: {e}")
+
+
+def handle_subscription_deleted(subscription):
+    try:
+        customer_id = subscription["customer"]
+        user = models.User.objects.get(stripe_customer_id=customer_id)
+        user.is_premium = False
+        user.subscription_end_date = timezone.now()
+        user.save()
+        logger.info(f"subscription deleted for user {user.username}")
+    except models.User.DoesNotExist:
+        logger.error(f"user not found for customer {customer_id}")
+    except Exception as e:
+        logger.error(f"error handling subscription deleted: {e}")
+
+
+def handle_payment_succeeded(invoice):
+    try:
+        customer_id = invoice["customer"]
+        user = models.User.objects.get(stripe_customer_id=customer_id)
+        logger.info(f"payment succeeded for user {user.username}")
+    except models.User.DoesNotExist:
+        logger.error(f"user not found for customer {customer_id}")
+    except Exception as e:
+        logger.error(f"error handling payment succeeded: {e}")
+
+
+def handle_payment_failed(invoice):
+    try:
+        customer_id = invoice["customer"]
+        user = models.User.objects.get(stripe_customer_id=customer_id)
+        logger.warning(f"payment failed for user {user.username}")
+    except models.User.DoesNotExist:
+        logger.error(f"user not found for customer {customer_id}")
+    except Exception as e:
+        logger.error(f"error handling payment failed: {e}")
