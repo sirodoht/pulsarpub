@@ -38,12 +38,12 @@ jobs:
         DOMAIN_NAME: ${{ vars.DOMAIN_NAME }}
         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        LOCALDEV: ${{ vars.LOCALDEV }}"
-        STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}"
-        STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}"
-        STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}"
-        STRIPE_PRICE_ID: ${{ secrets.STRIPE_PRICE_ID }}"
-        EMAIL_HOST: ${{ vars.EMAIL_HOST }}"
-        EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}"
-        EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}"
-        ADMINS: ${{ vars.ADMINS }}"
+        LOCALDEV: ${{ vars.LOCALDEV }}
+        STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+        STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+        STRIPE_PRICE_ID: ${{ secrets.STRIPE_PRICE_ID }}
+        EMAIL_HOST: ${{ vars.EMAIL_HOST }}
+        EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+        EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+        ADMINS: ${{ vars.ADMINS }}
