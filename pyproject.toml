@@ -9,6 +9,7 @@ dependencies = [
     "gunicorn>=23.0.0",
     "mistune>=3.0.2",
     "psycopg2>=2.9.10",
+    "stripe>=10.15.0",
 ]
 
 [tool.uv]
