@@ -485,7 +485,6 @@ def create_checkout_session(request):
                 }
             ],
             mode="subscription",
-            allow_promotion_codes=True,
             success_url=request.build_absolute_uri(reverse("subscription_success")),
             cancel_url=request.build_absolute_uri(reverse("subscription_index")),
         )
