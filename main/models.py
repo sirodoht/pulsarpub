@@ -34,6 +34,13 @@ class User(AbstractUser):
     homepage = models.TextField(blank=True, null=True, default="")
     show_nav = models.BooleanField(default=True)
 
+    # subscription fields
+    is_premium = models.BooleanField(default=False)
+    stripe_customer_id = models.CharField(max_length=255, blank=True, null=True)
+    stripe_subscription_id = models.CharField(max_length=255, blank=True, null=True)
+    subscription_start_date = models.DateTimeField(blank=True, null=True)
+    subscription_end_date = models.DateTimeField(blank=True, null=True)
+
     @property
     def blog_url(self):
         return f"{settings.PROTOCOL}//{self.username}.{settings.CANONICAL_HOST}"
