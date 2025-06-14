@@ -89,10 +89,10 @@
       become_user: postgres
     - name: pg permissions
       community.postgresql.postgresql_privs:
-        db: pulsar
+        login_db: pulsar
         privs: ALL
         objs: ALL_IN_SCHEMA
-        role: pulsar
+        roles: pulsar
         grant_option: true
       become_user: postgres
 
