@@ -15,7 +15,7 @@
 
         <br><strong>pages:</strong>
         {% for page in page_list %}
-        <br><a href="{{ blog_url }}{% url 'page_detail' page.slug %}">
+        <br><a href="{{ website_url }}{% url 'page_detail' page.slug %}">
             {{ page.title }}
             —
             <small><code>/{{ page.slug }}</code></small>

@@ -42,7 +42,7 @@ class User(AbstractUser):
     subscription_end_date = models.DateTimeField(blank=True, null=True)
 
     @property
-    def blog_url(self):
+    def website_url(self):
         return f"{settings.PROTOCOL}//{self.username}.{settings.CANONICAL_HOST}"
 
     @property

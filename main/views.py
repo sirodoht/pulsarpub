@@ -186,7 +186,8 @@ def dashboard(request):
         "main/dashboard.html",
         {
             "subscription_enabled": bool(settings.STRIPE_SECRET_KEY),
-            "blog_url": request.user.blog_url,
+            "website_url": request.user.website_url,
+            "page_list": models.Page.objects.filter(user=request.user),
         },
     )
 
@@ -484,6 +485,7 @@ def create_checkout_session(request):
                 }
             ],
             mode="subscription",
+            allow_promotion_codes=True,
             success_url=request.build_absolute_uri(reverse("subscription_success")),
             cancel_url=request.build_absolute_uri(reverse("subscription_index")),
         )
