@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import json
 import os
 from pathlib import Path
 from urllib import parse
@@ -167,6 +168,24 @@ STATIC_ROOT = BASE_DIR / "static"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Email Configuration
+# https://docs.djangoproject.com/en/5.2/topics/email/
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+if LOCALDEV:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "1") == "1"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_FROM_HOST = CANONICAL_HOST
+DEFAULT_FROM_EMAIL = f"pulsar.pub <admin@{EMAIL_FROM_HOST}>"
+
+ADMINS = tuple(json.loads(os.getenv("ADMINS", "[]")))
+SERVER_EMAIL = f"pulsar robot <robot@{EMAIL_FROM_HOST}>"
+EMAIL_SUBJECT_PREFIX = "[pulsar.pub] "
 
 # Stripe Configuration
 # https://docs.stripe.com/

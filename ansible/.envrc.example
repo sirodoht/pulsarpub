@@ -7,7 +7,7 @@ export ANSIBLE_USER=root
 
 # vars.yaml
 
-# Domain name and email for Caddy
+# Domain name for Caddy and email
 export DOMAIN_NAME=
 
 # Show exceptions and tracebacks on errors
@@ -34,6 +34,14 @@ export POSTGRES_PASSWORD=password
 # PostgreSQL database connection string
 # "password" must be the same as POSTGRES_PASSWORD above
 export DATABASE_URL=postgres://pulsar:password@localhost:5432/pulsar
+
+# Email
+export EMAIL_HOST=
+export EMAIL_HOST_USER=
+export EMAIL_HOST_PASSWORD=
+# ADMINS needs a JSON array in a string, eg.
+# export ADMINS='[["Alice","alice@example.com"], ["Bob","bob@example.com"]]'
+export ADMINS=
 
 # Stripe (optional)
 export STRIPE_PUBLISHABLE_KEY=

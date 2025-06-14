@@ -1,3 +1,6 @@
+# Domain name for email
+export DOMAIN_NAME=pulsar.pub
+
 # Show exceptions and tracebacks on errors
 # 1: show
 # 0: don't show
@@ -18,6 +21,14 @@ export SQLITE=0
 
 # PostgreSQL database connection string
 export DATABASE_URL=postgres://pulsar:@localhost:5432/pulsar
+
+# Email
+export EMAIL_HOST=
+export EMAIL_HOST_USER=
+export EMAIL_HOST_PASSWORD=
+# ADMINS needs a JSON array in a string, eg.
+# export ADMINS='[["Alice","alice@example.com"], ["Bob","bob@example.com"]]'
+export ADMINS=
 
 # Stripe (optional)
 export STRIPE_PUBLISHABLE_KEY=

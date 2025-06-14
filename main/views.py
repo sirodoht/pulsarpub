@@ -1,3 +1,4 @@
+import json
 import logging
 import uuid
 
@@ -8,6 +9,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.core.mail import mail_admins
 from django.http import (
     Http404,
     HttpResponse,
@@ -556,6 +558,9 @@ def stripe_webhook(request):
 
     logger.info(f"processing webhook event: {event['type']}")
 
+    # send admin email notifications
+    send_webhook_admin_email(event["type"], event)
+
     if event["type"] == "customer.subscription.created":
         subscription = event["data"]["object"]
         handle_subscription_created(subscription)
@@ -663,3 +668,27 @@ def handle_payment_failed(invoice):
         logger.error(f"user not found for customer {customer_id}")
     except Exception as e:
         logger.error(f"error handling payment failed: {e}")
+
+
+def send_webhook_admin_email(webhook_type, webhook_data):
+    try:
+        formatted_data = json.dumps(webhook_data, indent=2, default=str)
+        subject = f"Stripe Webhook Received: {webhook_type}"
+        message = f"""
+A Stripe webhook has been received and processed.
+
+Webhook Type: {webhook_type}
+Timestamp: {timezone.now()}
+
+Webhook Data:
+{formatted_data}
+        """
+        mail_admins(
+            subject=subject,
+            message=message,
+            fail_silently=True,  # don't fail the webhook if email fails
+        )
+        logger.info(f"admin email sent for webhook type: {webhook_type}")
+    except Exception as e:
+        # no exceptions to avoid breaking webhook processing
+        logger.error(f"failed to send admin email for webhook: {e}")
