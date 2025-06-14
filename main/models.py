@@ -25,6 +25,7 @@ class User(AbstractUser):
         max_length=150,
         blank=True,
         null=True,
+        help_text="To setup: Add an A record in your domain's DNS for 95.217.241.177",
         validators=[validators.validate_domain_name],
     )
     custom_css = models.TextField("Custom CSS", blank=True, null=True, default="")
