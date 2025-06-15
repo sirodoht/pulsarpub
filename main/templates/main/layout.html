@@ -3,7 +3,11 @@
     <head>
         <meta charset="utf-8">
         <title>{% block title %}pulsar.pub{% endblock %}</title>
+
+        {% block head_viewport %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% endblock %}
+
         <style>
             /* general */
             :root {
