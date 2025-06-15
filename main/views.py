@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 import uuid
 
 import stripe
@@ -499,7 +500,8 @@ def create_checkout_session(request):
 
 @login_required
 def subscription_success(request):
-    messages.success(request, "you've subscribed for pulsar premium")
+    messages.success(request, "thanks for subscribing!")
+    time.sleep(2)
     return redirect("subscription_index")
 
 
