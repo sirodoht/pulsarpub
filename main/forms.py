@@ -48,12 +48,6 @@ class UploadImagesForm(forms.Form):
     )
 
 
-class ContactForm(forms.Form):
-    name = forms.CharField()
-    email = forms.EmailField()
-    message = forms.CharField(widget=forms.Textarea)
-
-
 class SubscriptionForm(forms.Form):
     pass
 

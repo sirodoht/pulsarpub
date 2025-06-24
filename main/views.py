@@ -409,35 +409,6 @@ class ImageDelete(LoginRequiredMixin, DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 
-# Contact
-
-
-class Contact(FormView):
-    form_class = forms.ContactForm
-    template_name = "main/contact.html"
-    success_url = reverse_lazy("index")
-    success_message = "message has been sent, thank you"
-
-    def post(self, request, *args, **kwargs):
-        form_class = self.get_form_class()
-        form = self.get_form(form_class)
-        if form.is_valid():
-            # TODO: Email account user with message info
-            messages.success(self.request, self.success_message)
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if hasattr(self.request, "subdomain"):
-            context["account_user"] = self.request.account_user
-            context["page_list"] = models.Page.objects.filter(
-                user__username=self.request.subdomain
-            )
-        return context
-
-
 # Subscription
 
 

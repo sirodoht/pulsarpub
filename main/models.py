@@ -29,7 +29,6 @@ class User(AbstractUser):
         validators=[validators.validate_domain_name],
     )
     custom_css = models.TextField("Custom CSS", blank=True, null=True, default="")
-    contact = models.BooleanField("Enable Contact page", default=False)
 
     website_title = models.CharField(max_length=500, blank=True, null=True)
     homepage = models.TextField(blank=True, null=True, default="")

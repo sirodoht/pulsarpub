@@ -14,7 +14,6 @@ urlpatterns = [
         views.IndexBodyUpdate.as_view(),
         name="homepage_update",
     ),
-    path("contact/", views.Contact.as_view(), name="contact"),
 ]
 
 # Onboarding
