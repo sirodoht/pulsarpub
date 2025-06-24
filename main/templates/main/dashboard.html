@@ -31,6 +31,9 @@
         <br><a href="{% url 'subscription_index' %}">subscription</a>
         {% endif %}
         <br><a href="{% url 'user_update' %}">settings</a>
+        {% if request.user.is_superuser %}
+        <br><a href="{% url 'admin:index' %}">admin</a>
+        {% endif %}
         <br><a href="{% url 'landing' %}">landing</a>
         <br><form method="post" action="{% url 'logout' %}" class="form-inline">
             {% csrf_token %}
