@@ -8,12 +8,16 @@ urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard"),
     path("dashboard/landing/", views.landing, name="landing"),
     path("dashboard/css/", views.CSSUpdate.as_view(), name="css_update"),
-    path("dashboard/markdown/", views.markdown, name="markdown"),
     path(
         "dashboard/homepage/",
         views.IndexBodyUpdate.as_view(),
         name="homepage_update",
     ),
+]
+
+# Docs
+urlpatterns += [
+    path("docs/markdown/", views.markdown, name="markdown"),
 ]
 
 # Onboarding
