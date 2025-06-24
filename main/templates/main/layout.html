@@ -86,9 +86,11 @@
             <a style="color: black; margin-right: 16px;" href="{% url 'index' %}">website</a>
             <a style="color: black; margin-right: 16px;" href="{{ canonical_url }}{% url 'dashboard' %}">dashboard</a>
             {% if request.path == "/" %}
-            <a style="color: black;" href="{{ canonical_url }}{% url 'homepage_update' %}">edit home page</a>
+            <a style="color: black; margin-right: 16px;" href="{{ canonical_url }}{% url 'homepage_update' %}">edit home page</a>
+            <a style="color: black;" href="{{ canonical_url }}{% url 'css_update' %}">edit css</a>
             {% elif "/edit/" not in request.path %}
-            <a style="color: black;" href="edit/">edit this page</a>
+            <a style="color: black; margin-right: 16px;" href="edit/">edit this page</a>
+            <a style="color: black;" href="{{ canonical_url }}{% url 'css_update' %}">edit css</a>
             {% endif %}
         </div>
         {% endif %}
@@ -98,7 +100,8 @@
         <div style="background: white; text-align: center; box-shadow: 0 -5px 8px rgba(0, 0, 0, 0.5);">
             <a style="color: black; margin-right: 16px;" href="{% url 'index' %}">website</a>
             <a style="color: black; margin-right: 16px;" href="{{ canonical_url }}{% url 'dashboard' %}">dashboard</a>
-            <a style="color: black;" href="{{ canonical_url }}{% url 'homepage_update' %}">edit home page</a>
+            <a style="color: black; margin-right: 16px;" href="{{ canonical_url }}{% url 'homepage_update' %}">edit home page</a>
+            <a style="color: black;" href="{{ canonical_url }}{% url 'css_update' %}">edit css</a>
         </div>
         {% endif %}
 
