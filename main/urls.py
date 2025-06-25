@@ -52,6 +52,7 @@ urlpatterns += [
         "subscription/success/", views.subscription_success, name="subscription_success"
     ),
     path("subscription/cancel/", views.subscription_cancel, name="subscription_cancel"),
+    path("subscription/resume/", views.subscription_resume, name="subscription_resume"),
     path("webhooks/stripe/", views.stripe_webhook, name="stripe_webhook"),
 ]
 

@@ -506,6 +506,30 @@ def subscription_cancel(request):
     return render(request, "main/subscription_cancel.html", {"form": form})
 
 
+@login_required
+@require_POST
+def subscription_resume(request):
+    try:
+        if request.user.stripe_subscription_id:
+            # Remove the cancel_at_period_end flag to resume the subscription
+            stripe.Subscription.modify(
+                request.user.stripe_subscription_id, cancel_at_period_end=False
+            )
+            messages.success(
+                request,
+                "your subscription has been resumed and will continue to auto-renew",
+            )
+        else:
+            messages.error(request, "no active subscription found")
+    except Exception as e:
+        logger.error(f"Error resuming subscription: {e}")
+        messages.error(
+            request,
+            "there was an error resuming your subscription. please contact admin@pulsar.pub",
+        )
+    return redirect("subscription_index")
+
+
 @csrf_exempt
 @require_POST
 def stripe_webhook(request):

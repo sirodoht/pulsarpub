@@ -11,6 +11,10 @@
             {% if request.user.subscription_is_canceled %}
                 <p>subscription has been canceled</p>
                 <p>your premium access will end on {{ request.user.subscription_end_date|date:"M d, Y" }}</p>
+                <form action="{% url 'subscription_resume' %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="resume subscription">
+                </form>
             {% else %}
                 <p>currently on premium plan</p>
                 {% if request.user.subscription_end_date %}
