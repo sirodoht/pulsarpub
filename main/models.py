@@ -1,10 +1,13 @@
 import base64
+from datetime import timedelta
 
 import mistune
+import stripe
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 from main import validators
 
@@ -46,12 +49,28 @@ class User(AbstractUser):
         return f"{settings.PROTOCOL}//{self.username}.{settings.CANONICAL_HOST}"
 
     @property
+    def trial_days_left(self):
+        future = self.date_joined + timedelta(days=30)
+        return (future - timezone.now()).days
+
+    @property
     def homepage_as_html(self):
         markdown = mistune.create_markdown(
             escape=False,
             plugins=["task_lists", "footnotes"],
         )
         return markdown(self.homepage)
+
+    @property
+    def subscription_is_canceled(self):
+        if not self.is_premium or not self.stripe_subscription_id:
+            return False
+        try:
+            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+            return subscription.cancel_at_period_end
+        except Exception:
+            # if we can't retrieve, assume it's not canceled
+            return False
 
     def __str__(self):
         return self.username

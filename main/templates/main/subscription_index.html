@@ -6,22 +6,33 @@
 <main>
     <h1>subscription</h1>
 
-    {% if user.is_premium %}
+    {% if request.user.is_premium %}
         <div>
-            <p>currently on premium plan</p>
-            {% if user.subscription_end_date %}
-                <p>plan auto-renews on {{ user.subscription_end_date|date:"M d, Y" }}</p>
-            {% endif %}
+            {% if request.user.subscription_is_canceled %}
+                <p>subscription has been canceled</p>
+                <p>your premium access will end on {{ request.user.subscription_end_date|date:"M d, Y" }}</p>
+            {% else %}
+                <p>currently on premium plan</p>
+                {% if request.user.subscription_end_date %}
+                    <p>plan auto-renews on {{ request.user.subscription_end_date|date:"M d, Y" }}</p>
+                {% endif %}
 
-            <a href="{% url 'subscription_cancel' %}">
-                cancel subscription
-            </a>
+                <a href="{% url 'subscription_cancel' %}">
+                    cancel subscription
+                </a>
+            {% endif %}
         </div>
     {% else %}
         <div>
             <p>
-                a subscription is currently optional
+                a subscription is required to use pulsar.pub
             </p>
+
+            {% if not request.user.is_premium %}
+                <p>
+                    you have {{ user.trial_days_left }} days left in your trial
+                </p>
+            {% endif %}
 
             <form action="{% url 'create_checkout_session' %}" method="post">
                 {% csrf_token %}
