@@ -1,0 +1,23 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}delete account — pulsar.pub{% endblock %}
+
+{% block content %}
+<main class="delete">
+    <h1>delete your account?</h1>
+    <p><strong>warning:</strong> this cannot be undone. this will permanently delete your account, all your pages and images.</p>
+
+    <p>
+        this is forever goodbye.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="yes, delete account permanently" style="background-color: #d73a49; color: white; border: none;">
+    </form>
+
+    <p>
+        <a href="{% url 'user_update' %}">cancel</a>
+    </p>
+</main>
+{% endblock content %}

@@ -25,7 +25,7 @@
         <br>
         {% endif %}
 
-        <br><a href="{% url 'css_update' %}">css</a>
+        <br><a href="{% url 'css_update' %}">edit css</a>
         <br><a href="{% url 'image_list' %}">images</a>
         {% if subscription_enabled %}
         <br><a href="{% url 'subscription_index' %}">subscription</a>
@@ -34,6 +34,7 @@
         {% if request.user.is_superuser %}
         <br><a href="{% url 'admin:index' %}">admin</a>
         {% endif %}
+        <br><a href="mailto:pulse@pulsar.pub">help</a>
         <br><a href="{% url 'landing' %}">landing</a>
         <br><form method="post" action="{% url 'logout' %}" class="form-inline">
             {% csrf_token %}

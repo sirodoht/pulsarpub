@@ -1,15 +1,15 @@
 {% extends 'main/layout.html' %}
 
-{% block title %}Custom CSS — pulsar.pub{% endblock %}
+{% block title %}edit css — pulsar.pub{% endblock %}
 
 {% block content %}
 <main>
-    <h1>Custom CSS</h1>
+    <h1>edit css</h1>
 
     <form method="post">
         <textarea name="custom_css" cols="40" rows="30" id="id_custom_css">{{ form.custom_css.value }}</textarea>
         {% csrf_token %}
-        <input type="submit" value="Save">
+        <input type="submit" value="save">
     </form>
 </main>
 {% endblock content %}

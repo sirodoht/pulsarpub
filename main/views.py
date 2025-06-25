@@ -167,6 +167,26 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
         return self.request.user
 
 
+class UserDelete(LoginRequiredMixin, DeleteView):
+    model = models.User
+    template_name = "main/user_confirm_delete.html"
+    success_url = reverse_lazy("index")
+
+    def get_object(self):
+        return self.request.user
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        if self.object.stripe_subscription_id:
+            try:
+                stripe.Subscription.delete(self.object.stripe_subscription_id)
+            except Exception as e:
+                logger.warning(f"Failed to cancel subscription for user {self.object.username}: {e}")
+        self.object.delete()
+        return HttpResponseRedirect(reverse("index"))
+
+
 class CSSUpdate(LoginRequiredMixin, UpdateView):
     model = models.User
     fields = ["custom_css"]
@@ -511,7 +531,7 @@ def subscription_cancel(request):
 def subscription_resume(request):
     try:
         if request.user.stripe_subscription_id:
-            # Remove the cancel_at_period_end flag to resume the subscription
+            # remove cancel_at_period_end flag to resume the subscription
             stripe.Subscription.modify(
                 request.user.stripe_subscription_id, cancel_at_period_end=False
             )

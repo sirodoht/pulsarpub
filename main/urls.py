@@ -37,6 +37,7 @@ urlpatterns += [
         name="user_create",
     ),
     path("accounts/edit/", views.UserUpdate.as_view(), name="user_update"),
+    path("accounts/delete/", views.UserDelete.as_view(), name="user_delete"),
     path("accounts/domain/", views.domain_check, name="domain_check"),
 ]
 
