@@ -177,14 +177,15 @@ class UserDelete(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        success_url = self.get_success_url()
         if self.object.stripe_subscription_id:
             try:
                 stripe.Subscription.delete(self.object.stripe_subscription_id)
             except Exception as e:
-                logger.warning(f"Failed to cancel subscription for user {self.object.username}: {e}")
+                logger.warning(
+                    f"Failed to cancel subscription for user {self.object.username}: {e}"
+                )
         self.object.delete()
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CSSUpdate(LoginRequiredMixin, UpdateView):
